@@ -17,6 +17,13 @@ public class LeftNavigationPage {
     @FindBy(className = "bx--side-nav__items")
     protected WebElement leftHandNavigationBar;
 
+    @FindBy(xpath="//button[@title='Open menu']")
+    protected WebElement openLeftMenuButton;
+
+    @FindBy(xpath="//button[@title='Close menu']")
+    protected WebElement closeLeftMenuButton;
+
+
 
     protected WebElement leftNavMainModuleButton(String navBarMainModuleButtonName){
         return driver.findElement(By.xpath("//ibm-sidenav-item//span[contains(text(),'"+  navBarMainModuleButtonName +"')]"));

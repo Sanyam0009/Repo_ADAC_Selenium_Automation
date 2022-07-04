@@ -10,7 +10,7 @@ import java.time.Duration;
 public class BrowserManager {
 
     private static WebDriver driver;
-    private static int implicitlyWaitTimeout = 10;
+    private static int implicitlyWaitTimeout = 2;
     String appUrl="http://www.adac-dev-kyndryl.com/";
 
     /*##########################################################
@@ -27,18 +27,22 @@ public class BrowserManager {
             driver = new ChromeDriver();
             driver.get(appUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWaitTimeout));
+            //driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(implicitlyWaitTimeout));
             driver.manage().window().maximize();
         }else if(driverName.trim().equalsIgnoreCase("firefox")){
             WebDriverManager.firefoxdriver().setup();
             driver = new FirefoxDriver();
             driver.get(appUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWaitTimeout));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(implicitlyWaitTimeout));
             driver.manage().window().maximize();
+
         }else if(driverName.trim().equalsIgnoreCase("edge")){
             WebDriverManager.firefoxdriver().setup();
             driver = new FirefoxDriver();
             driver.get(appUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWaitTimeout));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(implicitlyWaitTimeout));
             driver.manage().window().maximize();
         }
 
