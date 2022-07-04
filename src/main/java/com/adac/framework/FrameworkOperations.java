@@ -9,14 +9,13 @@ import java.time.Duration;
 
 public class FrameworkOperations {
     WebDriver driver = BrowserManager.getDriver();
-    public void switchToFrameAfterWait(String frameName){
+
+    public void switchToFrameAfterWait(String frameName) {
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(1));
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(By.id(frameName)));
-        //driver.switchTo().frame(frameName);
-
     }
 
-    public void switchToMainFrame(){
+    public void switchToMainFrame() {
         driver.switchTo().defaultContent();
     }
 }
