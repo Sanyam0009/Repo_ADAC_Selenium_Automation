@@ -13,6 +13,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -62,7 +63,6 @@ public class LoginTest extends BrowserManager {
         TeamsPageActions teamsPageActions = new TeamsPageActions();
         teamsPageActions.createTeam("SanyamTeamT1", "Tester", "TestDesc");
 
-
 //        Response response =  RestAssured.given().baseUri("http://keycloak.adac-dev-kyndryl.com")
 //                .basePath("/auth/admin/realms/adac-dev-instance/groups")
 //                .get();
@@ -78,6 +78,5 @@ public class LoginTest extends BrowserManager {
         frameworkOperations.switchToFrameAfterWait("notification");
         driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();
         driver.findElement(By.xpath("//button[text()='Search By']")).click();
-
     }
 }
