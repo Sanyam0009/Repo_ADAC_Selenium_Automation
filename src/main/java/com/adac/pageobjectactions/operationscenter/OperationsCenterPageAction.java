@@ -1,8 +1,8 @@
-package com.adac.pageobjectactions.operationcenter;
+package com.adac.pageobjectactions.operationscenter;
 
-import com.adac.pageobjects.operationcenter.OperationCenterPage;
+import com.adac.pageobjects.operationscenter.OperationsCenterPage;
 
-public class OperationCenterPageAction extends OperationCenterPage {
+public class OperationsCenterPageAction extends OperationsCenterPage {
     public boolean checkSearchByDropdownDisplayed(){
         return searchByDropdown.isDisplayed();
     }

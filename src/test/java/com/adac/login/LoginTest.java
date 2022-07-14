@@ -8,20 +8,13 @@ import com.adac.pageobjectactions.adminplane.TeamsPageActions;
 import com.adac.pageobjectactions.header.HeaderPageActions;
 import com.adac.pageobjectactions.leftnavigation.LeftNavigationPageAction;
 import com.adac.pageobjectactions.login.LoginPageAction;
-import com.adac.pageobjectactions.operationcenter.OperationCenterPageAction;
+import com.adac.pageobjectactions.operationscenter.OperationsCenterPageAction;
 import com.adac.pageobjectactions.serviceplane.datadiscovery.DataDiscoveryPageAction;
-import com.adac.pageobjects.operationcenter.OperationCenterPage;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
-
-import java.time.Duration;
-import java.time.Instant;
 
 public class LoginTest extends BrowserManager {
     WebDriver driver;
@@ -87,10 +80,10 @@ public class LoginTest extends BrowserManager {
         FrameworkOperations frameworkOperations = new FrameworkOperations();
         frameworkOperations.switchToFrameAfterWait("notification");
         //driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();
-        OperationCenterPageAction operationCenterPageAction = new OperationCenterPageAction();
-        Assert.assertTrue(operationCenterPageAction.checkSearchByDropdownDisplayed(),
+        OperationsCenterPageAction operationsCenterPageAction = new OperationsCenterPageAction();
+        Assert.assertTrue(operationsCenterPageAction.checkSearchByDropdownDisplayed(),
                 "Expected : Operation center page should get loaded" +
                 "Actual : Operation center page is not loaded");
-        operationCenterPageAction.clickSearchByDropdown();
+        operationsCenterPageAction.clickSearchByDropdown();
     }
 }
