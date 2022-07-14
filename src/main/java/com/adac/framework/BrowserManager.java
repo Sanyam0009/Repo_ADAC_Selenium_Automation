@@ -27,7 +27,7 @@ public class BrowserManager {
             driver = new ChromeDriver();
             driver.get(appUrl);
             driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(implicitlyWaitTimeout));
-            //driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(implicitlyWaitTimeout));
+            driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(implicitlyWaitTimeout));
             driver.manage().window().maximize();
         }else if(driverName.trim().equalsIgnoreCase("firefox")){
             WebDriverManager.firefoxdriver().setup();

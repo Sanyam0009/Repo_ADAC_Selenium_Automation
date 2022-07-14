@@ -13,6 +13,6 @@ public class OperationCenterPage {
         PageFactory.initElements(driver,this);
     }
 
-    @FindBy(css="//button[text()='Search By']")
+    @FindBy(xpath="//button[text()='Search By']")
     protected WebElement searchByDropdown;
 }
