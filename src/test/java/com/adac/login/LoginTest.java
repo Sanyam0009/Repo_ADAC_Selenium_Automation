@@ -8,7 +8,9 @@ import com.adac.pageobjectactions.adminplane.TeamsPageActions;
 import com.adac.pageobjectactions.header.HeaderPageActions;
 import com.adac.pageobjectactions.leftnavigation.LeftNavigationPageAction;
 import com.adac.pageobjectactions.login.LoginPageAction;
+import com.adac.pageobjectactions.operationcenter.OperationCenterPageAction;
 import com.adac.pageobjectactions.serviceplane.datadiscovery.DataDiscoveryPageAction;
+import com.adac.pageobjects.operationcenter.OperationCenterPage;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.openqa.selenium.By;
@@ -28,28 +30,36 @@ public class LoginTest extends BrowserManager {
     public void initSetup() {
         driverManager("chrome");
         driver = getDriver();
+        ExtentReportManager.getExtentReport();
     }
 
     @Test(priority = 1)
     public void successLoginCheck() {
         LoginPageAction loginPageAction = new LoginPageAction();
         loginPageAction.adacLogin("adac", "@dmin@123");
-        ExtentReportManager.getExtentReport();
+        HeaderPageActions headerPageActions = new HeaderPageActions();
+
+        Assert.assertTrue(headerPageActions.checkAppIconDisplayed(),
+                "Expected : User should be able to Login successfully" +
+                "Actual : User is not able to Login");
     }
 
     @Test(priority = 2)
     public void dataDiscoveryValidate() throws InterruptedException {
         SoftAssert softAssert = new SoftAssert();
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
-        Instant instantBefore = Instant.now();
+//        Instant instantBefore = Instant.now();
         leftNavigationPageAction.navigateToSubModule("Service Plane","Data Reliability","Data Discovery");
         FrameworkOperations frameworkOperations = new FrameworkOperations();
         frameworkOperations.switchToFrameAfterWait("dataHub");
-        Instant instantAfter = Instant.now();
-        Duration timeElapsed = Duration.between(instantBefore,instantAfter);
-        System.out.println("Time Elapsed is = " + timeElapsed.toSeconds());
         DataDiscoveryPageAction dataDiscoveryPageAction = new DataDiscoveryPageAction();
-        dataDiscoveryPageAction.searchValue("SanyamTest");
+        Assert.assertTrue(dataDiscoveryPageAction.checkSearchBarDisplayed(),"Expected : Data Discovery Page should get loaded" +
+                "Actual : Data Discovery Page is not loaded");
+//        Instant instantAfter = Instant.now();
+//        Duration timeElapsed = Duration.between(instantBefore,instantAfter);
+//        System.out.println("Time Elapsed is = " + timeElapsed.toSeconds());
+        dataDiscoveryPageAction.searchValue("RedShift");
+        Assert.assertTrue(dataDiscoveryPageAction.checkResultsTextDisplayed());
         frameworkOperations.switchToMainFrame();
 
     }
@@ -76,7 +86,11 @@ public class LoginTest extends BrowserManager {
         leftNavigationPageAction.navigateToMainModule("Operations Center");
         FrameworkOperations frameworkOperations = new FrameworkOperations();
         frameworkOperations.switchToFrameAfterWait("notification");
-        driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();
-        driver.findElement(By.xpath("//button[text()='Search By']")).click();
+        //driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();
+        OperationCenterPageAction operationCenterPageAction = new OperationCenterPageAction();
+        Assert.assertTrue(operationCenterPageAction.checkSearchByDropdownDisplayed(),
+                "Expected : Operation center page should get loaded" +
+                "Actual : Operation center page is not loaded");
+        operationCenterPageAction.clickSearchByDropdown();
     }
 }

@@ -17,4 +17,7 @@ public class DataDiscoveryPage {
     @FindBy(xpath= "//input[@data-testid='search-input']")
     protected WebElement searchTextBar;
 
+    @FindBy(xpath="//div[@class='ant-typography' or contains(text(),'results')]")
+    protected WebElement resultsText;
+
 }
