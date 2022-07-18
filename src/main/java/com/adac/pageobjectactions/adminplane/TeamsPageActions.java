@@ -11,7 +11,7 @@ import org.openqa.selenium.interactions.Actions;
 public class TeamsPageActions extends TeamsPage {
     public void createTeam(String teamName, String roleName, String description) throws InterruptedException {
         teamNameTextBox.sendKeys(teamName);
-        Thread.sleep(5000);
+        Thread.sleep(7000);
         rolesDropdown.click();
         roleDropdownOption(roleName).click();
         teamDescriptiontextArea.sendKeys(description);

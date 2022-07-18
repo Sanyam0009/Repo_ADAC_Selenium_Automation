@@ -32,7 +32,13 @@ public class LeftNavigationPage {
     protected WebElement leftNavMenuModuleButton(String navBarMenuModuleButtonName){
         return driver.findElement(By.xpath("//ibm-sidenav-menu[@title='"+ navBarMenuModuleButtonName +"']"));
     }
-    protected WebElement leftNavSubModuleButton(String navBarModuleButtonName,String navBarSubModuleButtonName){
+
+    protected WebElement leftNavSubModuleButton(String navBarModuleButtonName,String navBarSubModuleButtonName) {
+        return driver.findElement(By.xpath("//ibm-sidenav-menu[@title='" + navBarModuleButtonName + "']" +
+                "//span[contains(text(),'" + navBarSubModuleButtonName + "')]"));
+    }
+
+    protected WebElement leftNavInnerSubModuleButton(String navBarModuleButtonName,String navBarSubModuleButtonName){
         return driver.findElement(By.xpath("//ibm-sidenav-menu[@title='"+ navBarModuleButtonName +"']" +
                 "//div[text()='"+ navBarSubModuleButtonName +"']"));
     }

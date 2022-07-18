@@ -21,7 +21,6 @@ public class JmeterPOC extends BrowserManager {
     @Test
     public void jmeterPOC(){
         Assert.assertTrue(driver.findElement(By.cssSelector("div.leftIcon")).isDisplayed());
-
         driver.findElement(By.xpath("//button[@title='Open menu']")).click();
         driver.findElement(By.xpath("//ibm-sidenav-menu[@title='Service Plane']")).click();
         driver.findElement(By.xpath("//ibm-sidenav-menu[@title='Data Reliability']")).click();

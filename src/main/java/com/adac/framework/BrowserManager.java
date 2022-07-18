@@ -10,7 +10,8 @@ import java.time.Duration;
 public class BrowserManager {
 
     private static WebDriver driver;
-    private static int implicitlyWaitTimeout = 2;
+    private static int implicitlyWaitTimeout = 20;
+    protected  static int explicitWaitTimeout = 20;
     String appUrl="http://www.adac-dev-kyndryl.com/";
 
     /*##########################################################

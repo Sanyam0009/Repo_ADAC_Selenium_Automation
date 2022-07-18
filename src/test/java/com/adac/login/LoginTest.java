@@ -10,6 +10,9 @@ import com.adac.pageobjectactions.leftnavigation.LeftNavigationPageAction;
 import com.adac.pageobjectactions.login.LoginPageAction;
 import com.adac.pageobjectactions.operationscenter.OperationsCenterPageAction;
 import com.adac.pageobjectactions.serviceplane.datadiscovery.DataDiscoveryPageAction;
+import com.adac.pageobjectactions.serviceplane.dataobservability.DataStoreItemsPageAction;
+import com.adac.pageobjectactions.serviceplane.dataobservability.DataStorePageAction;
+import com.adac.pageobjectactions.serviceplane.datareliability.DataReiliabilityPageAction;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -33,21 +36,23 @@ public class LoginTest extends BrowserManager {
         HeaderPageActions headerPageActions = new HeaderPageActions();
 
         Assert.assertTrue(headerPageActions.checkAppIconDisplayed(),
-                "Expected : User should be able to Login successfully" +
+                "Expected : User should be able to Login successfully. " +
                 "Actual : User is not able to Login");
     }
 
-    @Test(priority = 2)
+   @Test(priority = 2)
     public void dataDiscoveryValidate() throws InterruptedException {
         SoftAssert softAssert = new SoftAssert();
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
 //        Instant instantBefore = Instant.now();
-        leftNavigationPageAction.navigateToSubModule("Service Plane","Data Reliability","Data Discovery");
+        leftNavigationPageAction.navigateToSubMenu("Service Plane","Data Reliability");
+        DataReiliabilityPageAction dataReiliabilityPageAction = new DataReiliabilityPageAction();
+        dataReiliabilityPageAction.clickOnDataDiscoveryTab();
         FrameworkOperations frameworkOperations = new FrameworkOperations();
         frameworkOperations.switchToFrameAfterWait("dataHub");
         DataDiscoveryPageAction dataDiscoveryPageAction = new DataDiscoveryPageAction();
-        Assert.assertTrue(dataDiscoveryPageAction.checkSearchBarDisplayed(),"Expected : Data Discovery Page should get loaded" +
-                "Actual : Data Discovery Page is not loaded");
+        Assert.assertTrue(dataDiscoveryPageAction.checkSearchBarDisplayed(),"Expected : Data Discovery Page should get loaded. " +
+                "Actual : Data Discovery Page is not loaded.");
 //        Instant instantAfter = Instant.now();
 //        Duration timeElapsed = Duration.between(instantBefore,instantAfter);
 //        System.out.println("Time Elapsed is = " + timeElapsed.toSeconds());
@@ -57,7 +62,7 @@ public class LoginTest extends BrowserManager {
 
     }
 
-    @Test(priority = 3)
+   @Test(priority = 3)
     public void createTeamVerification() throws InterruptedException {
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
         leftNavigationPageAction.navigateToMainModule("Admin Plane");
@@ -82,8 +87,25 @@ public class LoginTest extends BrowserManager {
         //driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();
         OperationsCenterPageAction operationsCenterPageAction = new OperationsCenterPageAction();
         Assert.assertTrue(operationsCenterPageAction.checkSearchByDropdownDisplayed(),
-                "Expected : Operation center page should get loaded" +
-                "Actual : Operation center page is not loaded");
+                "Expected : Operation center page should get loaded. " +
+                "Actual : Operation center page is not loaded.");
         operationsCenterPageAction.clickSearchByDropdown();
+        frameworkOperations.switchToMainFrame();
+    }
+
+    @Test(priority=5)
+    public void DataObservalibilityTest(){
+        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
+        leftNavigationPageAction.navigateToSubModule("Service Plane","Data Observability");
+        DataStorePageAction dataStorePageAction = new DataStorePageAction();
+        dataStorePageAction.clickAmazonRedShiftImage();
+        FrameworkOperations frameworkOperations = new FrameworkOperations();
+        frameworkOperations.switchToFrameAfterWait("platformObservability");
+        DataStoreItemsPageAction dataStoreItemsPageAction=new DataStoreItemsPageAction();
+        Assert.assertTrue(dataStoreItemsPageAction.checkDiskSpaceUsedDisplayed(),
+                "Expected : Redshift Disk Space Used card should be visible" +
+                "Actual - Redshift Redshift disk space card is not appearing");
+        frameworkOperations.switchToMainFrame();
+
     }
 }
