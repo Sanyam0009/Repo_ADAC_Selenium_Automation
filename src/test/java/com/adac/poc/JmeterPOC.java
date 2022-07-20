@@ -1,4 +1,4 @@
-package com.adac.login;
+package com.adac.poc;
 
 import com.adac.framework.BrowserManager;
 import org.openqa.selenium.WebDriver;

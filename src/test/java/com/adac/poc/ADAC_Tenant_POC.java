@@ -1,10 +1,11 @@
-package com.adac.login;
+package com.adac.poc;
 
 import com.adac.framework.BrowserManager;
 import com.adac.framework.ExtentReportManager;
 import com.adac.framework.FrameworkOperations;
 import com.adac.pageobjectactions.adminplane.OverviewPageAction;
 import com.adac.pageobjectactions.adminplane.TeamsPageActions;
+import com.adac.pageobjectactions.dashboard.DashboardPageAction;
 import com.adac.pageobjectactions.header.HeaderPageActions;
 import com.adac.pageobjectactions.leftnavigation.LeftNavigationPageAction;
 import com.adac.pageobjectactions.login.LoginPageAction;
@@ -12,14 +13,19 @@ import com.adac.pageobjectactions.operationscenter.OperationsCenterPageAction;
 import com.adac.pageobjectactions.serviceplane.datadiscovery.DataDiscoveryPageAction;
 import com.adac.pageobjectactions.serviceplane.dataobservability.DataStoreItemsPageAction;
 import com.adac.pageobjectactions.serviceplane.dataobservability.DataStorePageAction;
-import com.adac.pageobjectactions.serviceplane.datareliability.DataReiliabilityPageAction;
+import io.restassured.RestAssured;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
-public class LoginTest extends BrowserManager {
+import java.util.HashMap;
+import java.util.Map;
+
+public class ADAC_Tenant_POC extends BrowserManager {
     WebDriver driver;
 
     @BeforeClass
@@ -30,7 +36,7 @@ public class LoginTest extends BrowserManager {
     }
 
     @Test(priority = 1)
-    public void successLoginCheck() {
+    public void successLoginCheck() throws InterruptedException {
         LoginPageAction loginPageAction = new LoginPageAction();
         loginPageAction.adacLogin("adac", "@dmin@123");
         HeaderPageActions headerPageActions = new HeaderPageActions();
@@ -40,14 +46,12 @@ public class LoginTest extends BrowserManager {
                 "Actual : User is not able to Login");
     }
 
-   @Test(priority = 2)
+    @Test(priority = 2)
     public void dataDiscoveryValidate() throws InterruptedException {
         SoftAssert softAssert = new SoftAssert();
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
 //        Instant instantBefore = Instant.now();
-        leftNavigationPageAction.navigateToSubMenu("Service Plane","Data Reliability");
-        DataReiliabilityPageAction dataReiliabilityPageAction = new DataReiliabilityPageAction();
-        dataReiliabilityPageAction.clickOnDataDiscoveryTab();
+        leftNavigationPageAction.navigateToSubModule("Service Plane","Data Governance");
         FrameworkOperations frameworkOperations = new FrameworkOperations();
         frameworkOperations.switchToFrameAfterWait("dataHub");
         DataDiscoveryPageAction dataDiscoveryPageAction = new DataDiscoveryPageAction();
@@ -62,24 +66,23 @@ public class LoginTest extends BrowserManager {
 
     }
 
-   @Test(priority = 3)
+    @Test(priority = 3)
     public void createTeamVerification() throws InterruptedException {
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
         leftNavigationPageAction.navigateToMainModule("Admin Plane");
         OverviewPageAction overviewPageAction = new OverviewPageAction();
         overviewPageAction.clickAddTeamButton();
         TeamsPageActions teamsPageActions = new TeamsPageActions();
-        teamsPageActions.createTeam("SanyamTeamT1", "Tester", "TestDesc");
-
-//        Response response =  RestAssured.given().baseUri("http://keycloak.adac-dev-kyndryl.com")
-//                .basePath("/auth/admin/realms/adac-dev-instance/groups")
-//                .get();
-//        System.out.println(response.getBody().asString());
-
+        FrameworkOperations frameworkOperations = new FrameworkOperations();
+        String teamName =  "SanyamTeamT1";// + frameworkOperations.dateTimeStampGenerator();
+        teamsPageActions.createTeam(teamName, "Tester", "TestDesc");
+       String messageText = teamsPageActions.validateTeamSaveMessage();
+       Assert.assertEquals(messageText,"Team has been added successfully!","Expected : Team should get saved successfully. "
+       + "Actual : Team creation got failed.");
     }
 
     @Test(priority = 4)
-    public void OperationCenterTest(){
+    public void OperationCenterTest() throws InterruptedException {
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
         leftNavigationPageAction.navigateToMainModule("Operations Center");
         FrameworkOperations frameworkOperations = new FrameworkOperations();
@@ -94,7 +97,7 @@ public class LoginTest extends BrowserManager {
     }
 
     @Test(priority=5)
-    public void DataObservalibilityTest(){
+    public void DataObservalibilityTest() throws InterruptedException {
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
         leftNavigationPageAction.navigateToSubModule("Service Plane","Data Observability");
         DataStorePageAction dataStorePageAction = new DataStorePageAction();
@@ -108,4 +111,52 @@ public class LoginTest extends BrowserManager {
         frameworkOperations.switchToMainFrame();
 
     }
+
+    @Test(priority = 6)
+    public void DashboardValidation() throws InterruptedException {
+        SoftAssert softAssert = new SoftAssert();
+        Map<String,String> param= new HashMap<>();
+        param.put("grant_type","password");
+        param.put("username","adac");
+        param.put("password","@dmin@123");
+        param.put("client_id","adac-api");
+        param.put("client_secret","mUHiga1IKUxc2AF9G9wFa08vWO5NucAg");
+        Map<String, String> headerLoginApi = new HashMap<>();
+        //header.put("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36");
+        headerLoginApi.put("Content-Type","application/x-www-form-urlencoded");
+        Response response1 =  RestAssured.given().headers(headerLoginApi).baseUri("http://authz.adac-dev-kyndryl.com")
+                .basePath("auth/realms/adac-dev-instance/protocol/openid-connect/token").formParams(param).post();
+        System.out.println(response1.getBody().jsonPath().get("access_token").toString());
+        String bearerToken = "Bearer " + response1.getBody().jsonPath().get("access_token").toString();
+
+        Map<String,String> headerCommon = new HashMap<>();
+        headerCommon.put("Content-Type","application/json");
+        headerCommon.put("Authorization",bearerToken);
+
+        Response response2 = RestAssured.given().headers(headerCommon).baseUri("http://adacapi.adac-dev-kyndryl.com")
+                .basePath("/os/api/v2/insights/pipeline/overview").queryParam("day","1").get();
+        System.out.println(response2.getBody().asString());
+        JsonPath pipeLineApiJsonResp = response2.getBody().jsonPath();
+        int totalPipelinesApiCount = pipeLineApiJsonResp.get("total_count");
+        int upPipelinesApiCount = pipeLineApiJsonResp.get("success");
+        int downPipelinesApiCount = pipeLineApiJsonResp.get("failed");
+        int upDownPiplineApiTotalCount = upPipelinesApiCount + downPipelinesApiCount;
+        softAssert.assertEquals(upDownPiplineApiTotalCount,totalPipelinesApiCount,
+                "Expected :  Pipelines API response total counts -"+ totalPipelinesApiCount +"- should be total of Up and Down count. "
+                        + "Actual : Pipelines API response Up and Down count total is - " + upDownPiplineApiTotalCount);
+
+        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
+        leftNavigationPageAction.navigateToMainModule("Dashboard");
+        DashboardPageAction dashboardPageAction = new DashboardPageAction();
+        int totalCount = dashboardPageAction.getDataOperationTotalCount("Pipelines");
+        int upCount = dashboardPageAction.getDataOperationUpCount("Pipelines");
+        int downCount = dashboardPageAction.getDataOperationDownCount("Pipelines");
+        int upDownTotalCount = upCount + downCount;
+        softAssert.assertEquals(upDownTotalCount,totalCount,
+                "Expected : Pipelines total counts -"+ totalCount +"- should be total of Up and Down count. "
+        + "Actual : Pipelines Up and Down count total is - " + upDownTotalCount);
+        softAssert.assertAll();
+
+    }
+
 }

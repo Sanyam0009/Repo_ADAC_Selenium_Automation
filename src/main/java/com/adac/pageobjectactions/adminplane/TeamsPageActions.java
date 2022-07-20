@@ -17,4 +17,8 @@ public class TeamsPageActions extends TeamsPage {
         teamDescriptiontextArea.sendKeys(description);
         saveButton.click();
     }
+
+    public String validateTeamSaveMessage(){
+        return successFailedText.getText();
+    }
 }

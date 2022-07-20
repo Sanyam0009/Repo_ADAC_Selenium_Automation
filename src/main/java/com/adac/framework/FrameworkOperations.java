@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.Date;
 
 public class FrameworkOperations {
     WebDriver driver = BrowserManager.getDriver();
@@ -18,5 +19,11 @@ public class FrameworkOperations {
 
     public void switchToMainFrame() {
         driver.switchTo().defaultContent();
+    }
+
+    public String dateTimeStampGenerator(){
+        Date date = new Date();
+        return "_" + date.toString().replace(":","").replace(" ","");
+
     }
 }

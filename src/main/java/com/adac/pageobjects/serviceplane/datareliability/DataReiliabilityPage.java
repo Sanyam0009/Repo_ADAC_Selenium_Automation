@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class DataReiliabilityPage {
-    protected WebDriver driver;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            protected WebDriver driver;
     public DataReiliabilityPage(){
         driver = BrowserManager.getDriver();
         PageFactory.initElements(driver,this);

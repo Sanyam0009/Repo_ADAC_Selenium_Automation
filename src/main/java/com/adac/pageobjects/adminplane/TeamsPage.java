@@ -26,6 +26,9 @@ public class TeamsPage {
     @FindBy(xpath="//button[contains(text(),'Save')]")
     protected WebElement saveButton;
 
+    @FindBy(xpath="//div[contains(@class,'res-cnt')]//div")
+    protected WebElement successFailedText;
+
     protected WebElement roleDropdownOption(String roleValue) {
         return driver.findElement(By.xpath("//*[@id='selectTeamAddEditBox']//ul//li[@title='Tester']"));
     }

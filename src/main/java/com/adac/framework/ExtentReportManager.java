@@ -42,7 +42,7 @@ public class ExtentReportManager {
         File source = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
 
         FileUtils.copyFile(source, new File(target));
-        return target;
+        return "../Screenshots/"+fileName;
 
     }
 }
