@@ -40,9 +40,14 @@ public class ExtentReportManager {
         new File(directory).mkdir();
         String target = directory + fileName;
         File source = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
-
         FileUtils.copyFile(source, new File(target));
         return "../Screenshots/"+fileName;
+    }
+
+    public static String getScreenShotAsBase64() throws IOException {
+        driver = BrowserManager.getDriver();
+        String imageBase64 = ((TakesScreenshot)driver).getScreenshotAs(OutputType.BASE64);
+        return "data:image/jpg;base64, " + imageBase64 ;
 
     }
 }

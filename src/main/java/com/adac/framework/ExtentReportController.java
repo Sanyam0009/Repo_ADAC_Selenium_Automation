@@ -37,7 +37,7 @@ public class ExtentReportController implements ITestListener {
     @SneakyThrows
     @Override
     public void onTestFailure(ITestResult result) {
-        String screenshotPath = ExtentReportManager.getScreenShot(result.getMethod().getMethodName());
+        String screenshotPath = ExtentReportManager.getScreenShotAsBase64();
         String logText = "<b>" + result.getMethod().getMethodName() + " - Test Failed <b>";
         Markup markupLogText = MarkupHelper.createLabel(logText, ExtentColor.RED);
         extentTestTL.get().fail(markupLogText);
@@ -49,7 +49,7 @@ public class ExtentReportController implements ITestListener {
         extentTestTL.get().fail("<details> <summary> <b> <font color='red'> Exception occurred - Click here to see details </summary> </b> </font>" +
                 errorLog.replace(",", "<br>") + "</derails> \n");
 
-        extentTestTL.get().fail("<b><font color='red'> Screenshot of Failure </font></b>", MediaEntityBuilder.createScreenCaptureFromPath(screenshotPath).build());
+        extentTestTL.get().fail("<b><font color='red'> Screenshot of Failure </font></b>", MediaEntityBuilder.createScreenCaptureFromBase64String(screenshotPath).build());
     }
 
     @Override
