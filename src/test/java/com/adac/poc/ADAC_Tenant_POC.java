@@ -19,6 +19,7 @@ import io.restassured.response.Response;
 import org.openqa.selenium.WebDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
@@ -29,8 +30,9 @@ public class ADAC_Tenant_POC extends BrowserManager {
     WebDriver driver;
 
     @BeforeClass
-    public void initSetup() {
-        driverManager("chrome");
+    @Parameters({"browser"})
+    public void initSetup(String browserName) {
+        driverManager(browserName);
         driver = getDriver();
         ExtentReportManager.getExtentReport();
     }
@@ -66,16 +68,16 @@ public class ADAC_Tenant_POC extends BrowserManager {
 
     }
 
-    @Test(priority = 3)
-    public void createTeamVerification() throws InterruptedException {
+    @Test(priority = 3, dataProviderClass = com.adac.poc.dataprovider.ADAC_Tenant_POC_Data.class , dataProvider = "createTeamVerification")
+    public void createTeamVerification(String teamName, String roleName, String description) throws InterruptedException {
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
         leftNavigationPageAction.navigateToMainModule("Admin Plane");
         OverviewPageAction overviewPageAction = new OverviewPageAction();
         overviewPageAction.clickAddTeamButton();
         TeamsPageActions teamsPageActions = new TeamsPageActions();
         FrameworkOperations frameworkOperations = new FrameworkOperations();
-        String teamName =  "SanyamTeamT1";// + frameworkOperations.dateTimeStampGenerator();
-        teamsPageActions.createTeam(teamName, "Tester", "TestDesc");
+        String teamName1 =  "SanyamTeamT1";// + frameworkOperations.dateTimeStampGenerator();
+        teamsPageActions.createTeam(teamName , roleName, description);
        String messageText = teamsPageActions.validateTeamSaveMessage();
        Assert.assertEquals(messageText,"Team has been added successfully!","Expected : Team should get saved successfully. "
        + "Actual : Team creation got failed.");

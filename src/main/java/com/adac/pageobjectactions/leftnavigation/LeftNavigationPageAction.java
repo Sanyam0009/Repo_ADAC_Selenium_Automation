@@ -20,17 +20,21 @@ public class LeftNavigationPageAction extends LeftNavigationPage {
 //    }
 
     public void navigateToSubModule(String mainMenu, String subModule) throws InterruptedException {
-        openLeftMenuButton.click();
+        if (!leftNavMainModuleButton("Admin Plane").isDisplayed())
+            openLeftMenuButton.click();
         leftNavMenuModuleButton(mainMenu).click();
         leftNavSubModuleButton(mainMenu,subModule).click();
-        closeLeftMenuButton.click();
+        if (leftNavMainModuleButton("Admin Plane").isDisplayed())
+            closeLeftMenuButton.click();
         Thread.sleep(2000);
     }
 
     public void navigateToMainModule(String mainModuleName) throws InterruptedException {
-        openLeftMenuButton.click();
+        if (!leftNavMainModuleButton("Admin Plane").isDisplayed())
+            openLeftMenuButton.click();
         leftNavMainModuleButton(mainModuleName).click();
-        closeLeftMenuButton.click();
+        if (leftNavMainModuleButton("Admin Plane").isDisplayed())
+            closeLeftMenuButton.click();
         Thread.sleep(2000);
     }
 }
