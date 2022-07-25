@@ -38,7 +38,7 @@ public class ADAC_Tenant_POC extends BrowserManager {
     }
 
     @Test(priority = 1)
-    public void successLoginCheck() throws InterruptedException {
+    public void successLoginValidation() throws InterruptedException {
         LoginPageAction loginPageAction = new LoginPageAction();
         loginPageAction.adacLogin("adac", "@dmin@123");
         HeaderPageActions headerPageActions = new HeaderPageActions();
@@ -49,72 +49,6 @@ public class ADAC_Tenant_POC extends BrowserManager {
     }
 
     @Test(priority = 2)
-    public void dataDiscoveryValidate() throws InterruptedException {
-        SoftAssert softAssert = new SoftAssert();
-        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
-//        Instant instantBefore = Instant.now();
-        leftNavigationPageAction.navigateToSubModule("Service Plane","Data Governance");
-        FrameworkOperations frameworkOperations = new FrameworkOperations();
-        frameworkOperations.switchToFrameAfterWait("dataHub");
-        DataDiscoveryPageAction dataDiscoveryPageAction = new DataDiscoveryPageAction();
-        Assert.assertTrue(dataDiscoveryPageAction.checkSearchBarDisplayed(),"Expected : Data Discovery Page should get loaded. " +
-                "Actual : Data Discovery Page is not loaded.");
-//        Instant instantAfter = Instant.now();
-//        Duration timeElapsed = Duration.between(instantBefore,instantAfter);
-//        System.out.println("Time Elapsed is = " + timeElapsed.toSeconds());
-        dataDiscoveryPageAction.searchValue("RedShift");
-        Assert.assertTrue(dataDiscoveryPageAction.checkResultsTextDisplayed());
-        frameworkOperations.switchToMainFrame();
-
-    }
-
-    @Test(priority = 3, dataProviderClass = com.adac.poc.dataprovider.ADAC_Tenant_POC_Data.class , dataProvider = "createTeamVerification")
-    public void createTeamVerification(String teamName, String roleName, String description) throws InterruptedException {
-        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
-        leftNavigationPageAction.navigateToMainModule("Admin Plane");
-        OverviewPageAction overviewPageAction = new OverviewPageAction();
-        overviewPageAction.clickAddTeamButton();
-        TeamsPageActions teamsPageActions = new TeamsPageActions();
-        FrameworkOperations frameworkOperations = new FrameworkOperations();
-        String teamName1 =  "SanyamTeamT1";// + frameworkOperations.dateTimeStampGenerator();
-        teamsPageActions.createTeam(teamName , roleName, description);
-       String messageText = teamsPageActions.validateTeamSaveMessage();
-       Assert.assertEquals(messageText,"Team has been added successfully!","Expected : Team should get saved successfully. "
-       + "Actual : Team creation got failed.");
-    }
-
-    @Test(priority = 4)
-    public void OperationCenterTest() throws InterruptedException {
-        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
-        leftNavigationPageAction.navigateToMainModule("Operations Center");
-        FrameworkOperations frameworkOperations = new FrameworkOperations();
-        frameworkOperations.switchToFrameAfterWait("notification");
-        //driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();
-        OperationsCenterPageAction operationsCenterPageAction = new OperationsCenterPageAction();
-        Assert.assertTrue(operationsCenterPageAction.checkSearchByDropdownDisplayed(),
-                "Expected : Operation center page should get loaded. " +
-                "Actual : Operation center page is not loaded.");
-        operationsCenterPageAction.clickSearchByDropdown();
-        frameworkOperations.switchToMainFrame();
-    }
-
-    @Test(priority=5)
-    public void DataObservalibilityTest() throws InterruptedException {
-        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
-        leftNavigationPageAction.navigateToSubModule("Service Plane","Data Observability");
-        DataStorePageAction dataStorePageAction = new DataStorePageAction();
-        dataStorePageAction.clickAmazonRedShiftImage();
-        FrameworkOperations frameworkOperations = new FrameworkOperations();
-        frameworkOperations.switchToFrameAfterWait("platformObservability");
-        DataStoreItemsPageAction dataStoreItemsPageAction=new DataStoreItemsPageAction();
-        Assert.assertTrue(dataStoreItemsPageAction.checkDiskSpaceUsedDisplayed(),
-                "Expected : Redshift Disk Space Used card should be visible" +
-                "Actual - Redshift Redshift disk space card is not appearing");
-        frameworkOperations.switchToMainFrame();
-
-    }
-
-    @Test(priority = 6)
     public void DashboardValidation() throws InterruptedException {
         SoftAssert softAssert = new SoftAssert();
         Map<String,String> param= new HashMap<>();
@@ -156,9 +90,79 @@ public class ADAC_Tenant_POC extends BrowserManager {
         int upDownTotalCount = upCount + downCount;
         softAssert.assertEquals(upDownTotalCount,totalCount,
                 "Expected : Pipelines total counts -"+ totalCount +"- should be total of Up and Down count. "
-        + "Actual : Pipelines Up and Down count total is - " + upDownTotalCount);
+                        + "Actual : Pipelines Up and Down count total is - " + upDownTotalCount);
         softAssert.assertAll();
 
+    }
+
+    @Test(priority = 3, dataProviderClass = com.adac.poc.dataprovider.ADAC_Tenant_POC_Data.class , dataProvider = "createTeamVerification")
+    public void AdminPlaneTeamCreationValidation(String teamName, String roleName, String description) throws InterruptedException {
+        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
+        leftNavigationPageAction.navigateToMainModule("Admin Plane");
+        OverviewPageAction overviewPageAction = new OverviewPageAction();
+        overviewPageAction.clickAddTeamButton();
+        TeamsPageActions teamsPageActions = new TeamsPageActions();
+        FrameworkOperations frameworkOperations = new FrameworkOperations();
+        String teamName1 =  "SanyamTeamT1";// + frameworkOperations.dateTimeStampGenerator();
+        teamsPageActions.createTeam(teamName , roleName, description);
+        String messageText = teamsPageActions.validateTeamSaveMessage();
+        Assert.assertEquals(messageText,"Team has been added successfully!","Expected : Team should get saved successfully. "
+                + "Actual : Team creation got failed.");
+    }
+
+    @Test(priority=4)
+    public void DataObservalibilityValidation() throws InterruptedException {
+        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
+        leftNavigationPageAction.navigateToSubModule("Service Plane","Data Observability");
+        DataStorePageAction dataStorePageAction = new DataStorePageAction();
+        dataStorePageAction.clickAmazonRedShiftImage();
+        FrameworkOperations frameworkOperations = new FrameworkOperations();
+        frameworkOperations.switchToFrameAfterWait("platformObservability");
+        DataStoreItemsPageAction dataStoreItemsPageAction=new DataStoreItemsPageAction();
+        Assert.assertTrue(dataStoreItemsPageAction.checkDiskSpaceUsedDisplayed(),
+                "Expected : Redshift Disk Space Used card should be visible" +
+                        "Actual - Redshift Redshift disk space card is not appearing");
+        frameworkOperations.switchToMainFrame();
+
+    }
+
+    @Test(priority = 5)
+    public void dataDiscoveryValidation() throws InterruptedException {
+        SoftAssert softAssert = new SoftAssert();
+        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
+//        Instant instantBefore = Instant.now();
+        leftNavigationPageAction.navigateToSubModule("Service Plane","Data Governance");
+        FrameworkOperations frameworkOperations = new FrameworkOperations();
+        frameworkOperations.switchToFrameAfterWait("dataHub");
+        DataDiscoveryPageAction dataDiscoveryPageAction = new DataDiscoveryPageAction();
+        Assert.assertTrue(dataDiscoveryPageAction.checkSearchBarDisplayed(),"Expected : Data Discovery Page should get loaded. " +
+                "Actual : Data Discovery Page is not loaded.");
+//        Instant instantAfter = Instant.now();
+//        Duration timeElapsed = Duration.between(instantBefore,instantAfter);
+//        System.out.println("Time Elapsed is = " + timeElapsed.toSeconds());
+        dataDiscoveryPageAction.searchValue("RedShift");
+        Assert.assertTrue(dataDiscoveryPageAction.checkResultsTextDisplayed());
+        frameworkOperations.switchToMainFrame();
+
+    }
+
+    @Test(priority = 6)
+    public void dataIncidentsValidation() throws InterruptedException {
+        LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
+        leftNavigationPageAction.navigateToSubModule("Control Plane","Data Incidents");
+        FrameworkOperations frameworkOperations = new FrameworkOperations();
+        frameworkOperations.switchToFrameAfterWait("notification");
+        //driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();
+        OperationsCenterPageAction operationsCenterPageAction = new OperationsCenterPageAction();
+        Assert.assertTrue(operationsCenterPageAction.checkSearchByDropdownDisplayed(),
+                "Expected : Data Incidents page should get loaded. " +
+                "Actual : Data Incidents page is not loaded.");
+        operationsCenterPageAction.applyIncludeAllServicesFilter();
+
+        Assert.assertTrue(operationsCenterPageAction.checkIncidentsExist(),
+                "Expected : Incidents should be displayed on the page loaded. " +
+                        "Actual : Incidents are not available.");
+        frameworkOperations.switchToMainFrame();
     }
 
 }

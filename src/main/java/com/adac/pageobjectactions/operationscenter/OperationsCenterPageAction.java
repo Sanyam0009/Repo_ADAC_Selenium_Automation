@@ -7,7 +7,17 @@ public class OperationsCenterPageAction extends OperationsCenterPage {
         return searchByDropdown.isDisplayed();
     }
 
-    public void clickSearchByDropdown(){
+    public void applyIncludeAllServicesFilter(){
         searchByDropdown.click();
+        includeAllServicesToggleButton.click();
+        searchByDoneButton.click();
+    }
+
+    public boolean checkIncidentsExist(){
+        if(incidentRows.size() > 0){
+            return true;
+        }else{
+           return false;
+        }
     }
 }
