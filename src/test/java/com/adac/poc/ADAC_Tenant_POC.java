@@ -150,6 +150,7 @@ public class ADAC_Tenant_POC extends BrowserManager {
     public void dataIncidentsValidation() throws InterruptedException {
         LeftNavigationPageAction leftNavigationPageAction = new LeftNavigationPageAction();
         leftNavigationPageAction.navigateToSubModule("Control Plane","Data Incidents");
+        Thread.sleep(3000);
         FrameworkOperations frameworkOperations = new FrameworkOperations();
         frameworkOperations.switchToFrameAfterWait("notification");
         //driver.findElement(By.cssSelector("form#auth-oidc > button[type='submit']")).click();

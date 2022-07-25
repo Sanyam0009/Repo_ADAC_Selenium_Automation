@@ -43,7 +43,7 @@ public class ExtentReportController implements ITestListener {
         extentTestTL.get().fail(markupLogText);
 
         extentTestTL.get().fail("<details> <summary> <b> <font color='red'> Assertion Failed  - Click here to see details </summary> </b> </font>" +
-                result.getThrowable().toString().replace(",","<br>") + "</derails> \n");
+                result.getThrowable().toString().replace(",","<br>").replace("Expected","<b>Expected</b>").replace("Actual","<b>Actual</b>") + "</derails> \n");
 
         String errorLog = Arrays.toString(result.getThrowable().getStackTrace());
         extentTestTL.get().fail("<details> <summary> <b> <font color='red'> Exception occurred - Click here to see details </summary> </b> </font>" +
